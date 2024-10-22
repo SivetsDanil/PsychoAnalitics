@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/register">Register</a></li>
+            <li><a href="/other-page">Other Page</a></li> <!-- Add more links as needed -->
+        </ul>
+    </nav>
+
+    <div id="chat-container">
+        <div id="message-container"></div>
+        <input type="text" id="message-input" placeholder="Type a message...">
+        <button id="send-btn">Send</button>
+    </div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+
+        const messageContainer = document.getElementById('message-container');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-btn');
+
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            socket.send(message);
+            addMessage('You', message, 'right');
+            messageInput.value = '';
+        });
+
+        socket.on('message', (msg) => {
+            if (msg.startsWith('Бот:')) {
+                addMessage('Bot', msg.replace('Бот: ', ''), 'left');
+            } else {
+                addMessage('User', msg, 'right');
+            }
+        });
+
+        function addMessage(sender, message, side) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', side);
+            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            messageContainer.appendChild(messageDiv);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>
