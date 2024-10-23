@@ -12,14 +12,20 @@
         <ul>
             <li><a href="/">Профиль</a></li>
             <li><a href="/">Зарегистрироваться</a></li>
-            <li><a href="/">Выйти</a></li> <!-- Add more links as needed -->
+            <li><a href="/">Выйти</a></li>
         </ul>
     </nav>
 
     <div id="chat-container">
         <div id="message-container"></div>
-        <input type="text" id="message-input" placeholder="Type a message...">
-        <button id="send-btn">Send</button>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Type a message...">
+            <button id="send-btn">
+                <img src="/static/send-icon.png" alt="Send" width="20">
+            </button>
+        </div>
+        <div>___</div>
+
     </div>
 
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
@@ -30,24 +36,36 @@
         const messageInput = document.getElementById('message-input');
         const sendButton = document.getElementById('send-btn');
 
-        sendButton.addEventListener('click', () => {
-            const message = messageInput.value;
-            socket.send(message);
-            addMessage('You', message, 'right');
-            messageInput.value = '';
-        });
-
-        socket.on('message', (msg) => {
-            if (msg.startsWith('Бот:')) {
-                addMessage('Bot', msg.replace('Бот: ', ''), 'left');
-            } else {
-                addMessage('User', msg, 'right');
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
             }
         });
 
-        function addMessage(sender, message, side) {
+        function sendMessage() {
+            const message = messageInput.value;
+            if (message.trim() === '') return;
+            socket.send(message);
+            addMessage('You', message, 'right', 'blue');
+            messageInput.value = '';
+        }
+
+        socket.on('message', (msg) => {
+            if (msg.startsWith('Бот:')) {
+                addMessage('Bot', msg.replace('Бот: ', ''), 'left', '#3fac31');
+            }
+        });
+
+        function addMessage(sender, message, side, color) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', side);
+            messageDiv.style.backgroundColor = color;
+            messageDiv.style.borderRadius = '10px';
+            messageDiv.style.padding = '10px';
+            messageDiv.style.color = 'white';
+            messageDiv.style.maxWidth = '60%';  // Сообщения не растягиваются на весь экран
+            messageDiv.style.wordWrap = 'break-word';  // Разбиение длинных слов
             messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
             messageContainer.appendChild(messageDiv);
             messageContainer.scrollTop = messageContainer.scrollHeight;

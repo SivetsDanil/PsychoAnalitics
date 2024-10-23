@@ -1,6 +1,4 @@
 import json
-from random import choices
-
 import requests
 import urllib3
 import uuid
