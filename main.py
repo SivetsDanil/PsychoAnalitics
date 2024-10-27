@@ -13,13 +13,13 @@ message_queue = queue.Queue()
 
 @app.route('/')
 def index():
-    global token
-    token = get_token()
-    return render_template('index.html')
+    return render_template('test.html')
 
 
 @socketio.on('message')
 def handle_message(msg):
+    token = get_token()
+
     bot_reply = send_message(msg, token)
     send(f"Бот: {bot_reply}", broadcast=False)
 

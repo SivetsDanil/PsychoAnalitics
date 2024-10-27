@@ -8,21 +8,22 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav>
-        <ul>
-            <li><a href="/">Профиль</a></li>
-            <li><a href="/">Зарегистрироваться</a></li>
-            <li><a href="/">Выйти</a></li>
-        </ul>
+    <nav class="navbar">
+    <div class="navbar-left">
+        <!-- Кнопки навигации слева, если есть -->
+    </div>
+    <div class="navbar-right">
+        <button id="video-call-btn">
+            <img src="img/call.png" alt="Видеозвонок" />
+        </button>
+    </div>
     </nav>
 
     <div id="chat-container">
         <div id="message-container"></div>
         <div id="input-container">
             <input type="text" id="message-input" placeholder="Type a message...">
-            <button id="send-btn">
-                <img src="/static/send-icon.png" alt="Send" width="20">
-            </button>
+            <button id="send-btn">↑</button>
         </div>
         <div>___</div>
 
