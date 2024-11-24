@@ -63,10 +63,12 @@ body, html {
     height: 20px;
     transform: translateY(5px);
 }
-
+:root {
+    --vh: 100vh; /* Первоначально 100vh */
+}
 /* Контейнер для чата */
 .chat-container {
-    height: calc(100vh - 35px); /* Учитываем высоту навигационной панели */
+    height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-bottom));
     background-color: #2e2e2e;
     padding: 20px 10px; /* Убираем лишний отступ снизу */
     display: flex;
