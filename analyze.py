@@ -1,19 +1,17 @@
 import cv2
 import subprocess
 import re
-import os
 import json
-import threading
-import time
+import os
 
 NODE_SCRIPT = "./node_project/face_api.js"
 TEMP_IMAGE_PATH = "./temp_frame.jpg"
-ANALYSIS_INTERVAL = 1
-
-last_analysis_time = 0
-
 
 def analyze_frame(image_path):
+    """
+    Анализ кадра с использованием Node.js и face-api.js.
+    Возвращает пол и эмоции.
+    """
     try:
         result = subprocess.run(
             ["node", NODE_SCRIPT, image_path],
@@ -25,19 +23,10 @@ def analyze_frame(image_path):
         if match:
             raw_json = match.group(0)
             json_data = json.loads(raw_json)[0]
-            print(f"Возраст: {json_data['age']}")
-            print(f"Пол: {json_data['gender']}")
-            print(f"Эмоции: {json_data['expressions']}")
-        else:
-            print("JSON не найден в выводе")
+            return [
+                f"Пол: {json_data['gender']}",
+                f"Эмоция: {list(filter(lambda x: json_data['expressions'][x] == max(json_data['expressions'].values()), json_data['expressions']))[0]}"
+            ]
     except Exception as e:
         print(f"Ошибка анализа кадра: {e}")
-
-
-def async_analysis(frame):
-    cv2.imwrite(TEMP_IMAGE_PATH, frame)
-    if os.path.exists(TEMP_IMAGE_PATH):
-        threading.Thread(target=analyze_frame, args=(TEMP_IMAGE_PATH,)).start()
-    else:
-        print("Ошибка: файл не был сохранен")
-
+        return None

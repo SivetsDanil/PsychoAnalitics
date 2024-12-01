@@ -170,3 +170,36 @@ body, html {
     height: 24px;
     fill: #2e2e2e;
 }
+#micro-btn {
+    background-color: #549e61;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+#micro-btn img {
+    width: 24px;
+    height: 24px;
+    fill: #2e2e2e;
+}
+
+#info-container {
+            display: none; /* Скрыть контейнер по умолчанию */
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 14px; /* Меньший шрифт */
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 9999; /* Ставим на передний план */
+        }

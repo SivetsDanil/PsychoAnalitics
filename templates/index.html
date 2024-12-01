@@ -3,74 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
+    <title>Chat with Navigation</title>
     <link rel="stylesheet" href="/static/style.css">
+
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
-    <div class="navbar-left">
-        <!-- Кнопки навигации слева, если есть -->
-    </div>
-    <div class="navbar-right">
-        <button id="video-call-btn">
-            <img src="img/call.png" alt="Видеозвонок" />
-        </button>
-    </div>
+        <div class="navbar-left">
+            <button id="logo-btn">
+                <img src="/static/img/logo.png" alt="Логотип"/>
+            </button>
+            <button>Профиль</button>
+            <button>Войти</button>
+        </div>
+        <div class="navbar-right">
+            <button id="video-call-btn">
+                <img src="/static/img/call.png" alt="Видеозвонок"/>
+            </button>
+
+        </div>
     </nav>
 
-    <div id="chat-container">
+    <!-- Chat Container -->
+    <div class="chat-container">
         <div id="message-container"></div>
         <div id="input-container">
-            <input type="text" id="message-input" placeholder="Type a message...">
-            <button id="send-btn">↑</button>
+            <input type="text" id="message-input" placeholder="Введите сообщение...">
+            <button id="micro-btn">
+                <img src="/static/img/micro.png" alt="Микрофон"/>
+            </button>
+            <button id="send-btn">
+                <img src="/static/img/send.png" alt="Отправить"/>
+            </button>
         </div>
-        <div>___</div>
+    </div>
 
+    <!-- Information Display for Analyzed Data (Emotion and Gender) -->
+    <div id="info-container">
+        <!-- Информация по эмоциям и полу будет обновляться здесь -->
     </div>
 
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script>
-        const socket = io();
-
-        const messageContainer = document.getElementById('message-container');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-btn');
-
-        sendButton.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        function sendMessage() {
-            const message = messageInput.value;
-            if (message.trim() === '') return;
-            socket.send(message);
-            addMessage('You', message, 'right', 'blue');
-            messageInput.value = '';
-        }
-
-        socket.on('message', (msg) => {
-            if (msg.startsWith('Бот:')) {
-                addMessage('Bot', msg.replace('Бот: ', ''), 'left', '#3fac31');
-            }
-        });
-
-        function addMessage(sender, message, side, color) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', side);
-            messageDiv.style.backgroundColor = color;
-            messageDiv.style.borderRadius = '10px';
-            messageDiv.style.padding = '10px';
-            messageDiv.style.color = 'white';
-            messageDiv.style.maxWidth = '60%';  // Сообщения не растягиваются на весь экран
-            messageDiv.style.wordWrap = 'break-word';  // Разбиение длинных слов
-            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
-            messageContainer.appendChild(messageDiv);
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-        }
-    </script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

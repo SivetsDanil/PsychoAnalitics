@@ -41,9 +41,8 @@ def get_age_from_image(image):
     else:
         return 'Ошибка при запросе'
 
-# Открытие вебкамеры
-cap = cv2.VideoCapture(0)  # Индекс 0 для первой камеры
 
+cap = cv2.VideoCapture(0)
 while True:
     ret, frame = cap.read()
     if not ret:
@@ -51,13 +50,10 @@ while True:
 
     # Отображение захваченного изображения
     cv2.imshow('Webcam', frame)
-
     # Получение возраста при нажатии на клавишу 's'
     key = cv2.waitKey(1) & 0xFF
     if key == ord('s'):  # Нажмите 's', чтобы отправить изображение на API
         result = get_age_from_image(frame)
-        print(result)
-
     # Выход из цикла при нажатии на клавишу 'q'
     if key == ord('q'):
         break

@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat with Navigation</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Стили для контейнера с анализом, чтобы он был на переднем плане */
+        #info-container {
+            display: none; /* Скрыть контейнер по умолчанию */
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 16px; /* Меньший шрифт */
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 9999; /* Ставим на передний план */
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -20,6 +36,7 @@
             <button id="video-call-btn">
                 <img src="/static/img/call.png" alt="Видеозвонок"/>
             </button>
+
         </div>
     </nav>
 
@@ -28,142 +45,21 @@
         <div id="message-container"></div>
         <div id="input-container">
             <input type="text" id="message-input" placeholder="Введите сообщение...">
+            <button id="micro-btn">
+                <img src="/static/img/micro.png" alt="Микрофон"/>
+            </button>
             <button id="send-btn">
                 <img src="/static/img/send.png" alt="Отправить"/>
             </button>
         </div>
     </div>
 
+    <!-- Information Display for Analyzed Data (Emotion and Gender) -->
+    <div id="info-container">
+        <!-- Информация по эмоциям и полу будет обновляться здесь -->
+    </div>
+
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script>
-        const socket = io();
-        const messageContainer = document.getElementById('message-container');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-btn');
-        const videoCallBtn = document.getElementById('video-call-btn');
-
-        let videoStream = null;
-        let captureInterval = null;
-        let isVideoActive = false;
-
-        sendButton.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        videoCallBtn.addEventListener('click', toggleVideoStream);
-
-        function sendMessage() {
-            const message = messageInput.value;
-            if (message.trim() === '') return;
-            socket.send(message);
-            addMessage('Вы', message, 'right');
-            messageInput.value = '';
-        }
-
-        socket.on('message', (msg) => {
-            if (msg.startsWith('Бот:')) {
-                addMessage('Надежда', msg.replace('Бот: ', ''), 'left');
-            }
-        });
-
-        function addMessage(sender, message, side) {
-            const senderDiv = document.createElement('div');
-            senderDiv.classList.add('message-sender', side);
-            senderDiv.textContent = sender;
-
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', side);
-            messageDiv.style.borderRadius = '10px';
-            messageDiv.style.padding = '10px';
-            messageDiv.style.color = 'white';
-            messageDiv.style.maxWidth = '60%';
-            messageDiv.style.wordWrap = 'break-word';
-
-            const formattedMessage = message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            messageDiv.innerHTML = formattedMessage;
-
-            messageContainer.appendChild(senderDiv);
-            messageContainer.appendChild(messageDiv);
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-        }
-
-        function toggleVideoStream() {
-            if (isVideoActive) {
-                stopVideoStream();
-            } else {
-                startVideoStream();
-            }
-        }
-
-        async function startVideoStream() {
-            try {
-                isVideoActive = true;
-                videoCallBtn.innerHTML = "Завершить";
-                videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const videoElement = document.createElement("video");
-                videoElement.srcObject = videoStream;
-                videoElement.play();
-                document.body.appendChild(videoElement);
-                videoElement.style.position = "absolute";
-                videoElement.style.top = "10px";
-                videoElement.style.left = "10px";
-                videoElement.style.width = "300px";
-
-                captureInterval = setInterval(() => {
-                    const canvas = document.createElement("canvas");
-                    const context = canvas.getContext("2d");
-                    canvas.width = videoElement.videoWidth;
-                    canvas.height = videoElement.videoHeight;
-                    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-
-                    const frameData = canvas.toDataURL("image/jpeg");
-                    sendFrame(frameData);
-                }, 1000);  // Отправка кадра каждую секунду
-            } catch (err) {
-                console.error("Ошибка при доступе к веб-камере:", err);
-                isVideoActive = false;
-            }
-        }
-
-        function stopVideoStream() {
-            if (videoStream) {
-                const tracks = videoStream.getTracks();
-                tracks.forEach(track => track.stop());
-                videoStream = null;
-            }
-            clearInterval(captureInterval);
-            isVideoActive = false;
-            videoCallBtn.innerHTML = '<img src="/static/img/call.png" alt="Видеозвонок"/>';
-            const videoElement = document.querySelector("video");
-            if (videoElement) {
-                videoElement.remove();
-            }
-        }
-
-        async function sendFrame(frameData) {
-            try {
-                await fetch("/process-frame", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ frame: frameData })
-                });
-            } catch (err) {
-                console.error("Ошибка отправки кадра:", err);
-            }
-        }
-
-        socket.send('Привет! Представься как опытный психолог. Напиши что ты опытный психолог и готова помочь. Ты девушка. не больше 10 слов');
-
-        function setVhProperty() {
-            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.0096}px`);
-        }
-        window.addEventListener('resize', setVhProperty);
-        setVhProperty();
-    </script>
+    <script src="/static/script.js"></script>
 </body>
 </html>
