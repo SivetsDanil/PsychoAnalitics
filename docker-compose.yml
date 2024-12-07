@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  psycho-analytics:
+    build:
+      context: .
+    ports:
+      - "5000:5000"  # Flask приложение
+    volumes:
+      - .:/app  # Для локальной разработки
+    environment:
+      - FLASK_ENV=development
