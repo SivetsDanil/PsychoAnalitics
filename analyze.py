@@ -1,8 +1,6 @@
-import cv2
 import subprocess
 import re
 import json
-import os
 
 NODE_SCRIPT = "./node_project/face_api.js"
 TEMP_IMAGE_PATH = "./temp_frame.jpg"
@@ -28,5 +26,5 @@ def analyze_frame(image_path):
                 f"Эмоция: {list(filter(lambda x: json_data['expressions'][x] == max(json_data['expressions'].values()), json_data['expressions']))[0]}"
             ]
     except Exception as e:
-        print(f"Ошибка анализа кадра: {e}")
+        print(e)
         return None

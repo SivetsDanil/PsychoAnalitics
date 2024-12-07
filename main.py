@@ -1,13 +1,10 @@
 from flask import Flask, render_template, session, request, jsonify
 from flask_socketio import SocketIO, send
 import threading
-import queue
 from gigachat import *
 import base64
 import cv2
 import numpy as np
-import os
-import time
 from analyze import analyze_frame
 
 app = Flask(__name__)
@@ -48,11 +45,18 @@ def decode_base64_to_image(base64_string):
             return None
         return image
     except Exception as e:
+        print(e)
         pass
 
 @app.route('/')
 def index():
+    return render_template('unlog_index.html')
+
+
+@app.route('/chat')
+def chat():
     return render_template('index.html')
+
 
 @socketio.on('message')
 def handle_message(msg):
@@ -60,15 +64,14 @@ def handle_message(msg):
     last_bot_message = session.get('last_bot_message')
     sid = request.args.get('sid', None)
     analysis_info = user_analysis.get(sid, ['', "Не включена камера"])
-    text = f'Сгенерируй текст-ответ на сообщение. Сообщение в чате между психологом и пациентом. '
-    f'Прошлое сообщение от психолога было такое: \"{last_bot_message}\".Теперь говорит пациент. Сообщение пациента: "{msg}".'
-    f' Сгенерируй текст-ответ на это сообщение от пациента. '
-    f'Текст-ответ на сообщение пациента написан девушкой, психолог, очень умная, имеет большой '
-    f'опыт, имя Надя. в тексте Надя отвечает своему пациенту. Ответ дружелюбный, краткий, '
-    f'заботливый, добрый, логичный. В тексте-ответе Надя говорит профессиональное мнение психолога.'
-    f' В тексте Надя рассуждает как психолог. В тексте Надя выносит вердикт. В тексте Надя'
-    f' рассматривает ситуацию пациента с точки зрения психологии. Текст это ответ на сообщение пациента.'
-    f' пиши простым языком. пиши так, будто пишет психолог, пиши в стиле переписке между друзьями.'
+    text = (f'Сгенерируй текст-ответ на сообщение. Сообщение в чате между психологом и пациентом. Прошлое сообщение от '
+            f'психолога было такое: \"{last_bot_message}\".Теперь говорит пациент. Сообщение пациента: "{msg}". Сгенерируй'
+            f' текст-ответ на это сообщение от пациента. Текст-ответ на сообщение пациента написан девушкой, психолог,'
+            f' очень умная, имеет большой опыт, имя Надя. в тексте Надя отвечает своему пациенту. Ответ дружелюбный,'
+            f' краткий, заботливый, добрый, логичный. В тексте-ответе Надя говорит профессиональное мнение психолога. '
+            f'В тексте Надя рассуждает как психолог. В тексте Надя выносит вердикт. В тексте Надя рассматривает ситуацию'
+            f' пациента с точки зрения психологии. Текст это ответ на сообщение пациента. пиши простым языком. пиши так, '
+            f'будто пишет психолог, пиши в стиле переписке между друзьями.')
     if analysis_info[1] != 'Не включена камера':
         text += f'Пользователь испытывает эмоцию {emotion_dictionary[analysis_info[1].split()[1]]}'
     bot_reply = send_message(text, token)
@@ -104,7 +107,8 @@ def process_frame():
             socketio.emit('analysis-update', {'gender': 'Ошибка анализа', 'emotion': ''}, room=sid)
 
         return jsonify({"status": "success", "analysis": result}), 200
-    except Exception:
+    except Exception as e:
+        print(e)
         return jsonify({"status": "error", "message": "Ошибка обработки кадра"}), 500
 
 
@@ -116,4 +120,4 @@ def handle_camera_stopped(data):
 
 if __name__ == '__main__':
     threading.Thread(daemon=True).start()
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, port=5000, allow_unsafe_werkzeug=True)

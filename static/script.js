@@ -149,15 +149,17 @@ socket.on('analysis-update', (data) => {
     const gender = data.gender.replace('Пол: ', '').toLowerCase(); // Убираем "Пол: " и приводим к нижнему регистру
 
     // Переводим эмоцию и пол с помощью словарей
-    const translatedEmotion = emotionDictionary[emotion] || 'Неизвестная эмоция';  // Если эмоция не найдена, выводим "Неизвестная эмоция"
-    const translatedGender = genderDictionary[gender] || 'Неизвестный пол';  // Если пол не найден, выводим "Неизвестный пол"
 
-    // Добавляем обратно префиксы
-    const finalEmotion = `Эмоция: ${translatedEmotion}`;
-    const finalGender = `Пол: ${translatedGender}`;
+    const translatedEmotion = emotionDictionary[emotion]
+        ? `Эмоция: ${emotionDictionary[emotion]}`
+        : 'Ошибка анализа';  // Если эмоция не найдена, выводим "Ошибка анализа"
+
+    const translatedGender = genderDictionary[gender]
+        ? `Пол: ${genderDictionary[gender]}`
+        : 'Поместите лицо в кадр';  // Если пол не найден, выводим "Поместите лицо в кадр"
 
     // Обновляем отображение
-    infoContainer.innerHTML = `${finalGender} <br> ${finalEmotion}`;
+    infoContainer.innerHTML = `${translatedGender} <br> ${translatedEmotion}`;
 });
 
 
@@ -195,16 +197,31 @@ async function startVideoStream() {
     try {
         isVideoActive = true;
         videoCallBtn.innerHTML = "Завершить";
+
+        // Получаем видеопоток
         videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
         const videoElement = document.createElement("video");
         videoElement.srcObject = videoStream;
-        videoElement.play();
-        document.body.appendChild(videoElement);
-        videoElement.style.position = "absolute";
-        videoElement.style.top = "10px";
-        videoElement.style.left = "10px";
-        videoElement.style.width = "300px";
+        videoElement.autoplay = true;
+        videoElement.muted = true; // Без звука, чтобы избежать проблем с iOS
+        videoElement.playsInline = true; // Для предотвращения полноэкранного режима на iOS
 
+        // Добавляем элемент видео в DOM
+        document.body.appendChild(videoElement);
+        const chatContainer = document.querySelector('.chat-container');
+        chatContainer.style.marginTop = "200px";
+        chatContainer.style.height = `calc(var(--vh, 1vh) * 100 - env(safe-area-inset-bottom) - 200px)`; // Уменьшаем высоту
+        // Адаптируем стиль для мобильных устройств
+        const isMobile = window.innerWidth <= 768; // Мобильное устройство, если ширина <= 768px
+        videoElement.style.position = "absolute";
+        videoElement.style.top = "50px";
+        videoElement.style.left = "10px";
+        videoElement.style.width = isMobile ? "150px" : "300px"; // Ширина для мобильных устройств
+        videoElement.style.height = isMobile ? "auto" : "auto";
+        videoElement.style.borderRadius = "10px";
+        videoElement.style.zIndex = "1000"; // На передний план
+
+        // Обновляем кадры для анализа
         captureInterval = setInterval(() => {
             const canvas = document.createElement("canvas");
             const context = canvas.getContext("2d");
@@ -214,15 +231,17 @@ async function startVideoStream() {
 
             const frameData = canvas.toDataURL("image/jpeg");
             sendFrame(frameData);
-        }, 1000);  // Отправка кадра каждую секунду
+        }, 1000); // Отправка кадра каждую секунду
 
-        // Показываем контейнер с анализом при активации камеры
+        // Отображаем контейнер с анализом
         infoContainer.style.display = "block";
     } catch (err) {
         console.error("Ошибка при доступе к веб-камере:", err);
         isVideoActive = false;
     }
 }
+
+
 
 function stopVideoStream() {
     if (videoStream) {
@@ -234,6 +253,9 @@ function stopVideoStream() {
     isVideoActive = false;
     videoCallBtn.innerHTML = '<img src="/static/img/call.png" alt="Видеозвонок"/>';
     const videoElement = document.querySelector("video");
+    const chatContainer = document.querySelector('.chat-container');
+    chatContainer.style.marginTop = "0px";
+    chatContainer.style.height = `calc(var(--vh, 1vh) * 100 - env(safe-area-inset-bottom))`; // Уменьшаем высоту
     if (videoElement) {
         videoElement.remove();
     }
