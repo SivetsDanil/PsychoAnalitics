@@ -1,2 +1,3 @@
-for i in range(30):
-    print('=='.join(input().split()[0:-1]))
+for i in range(300):
+    a = input().split()
+    print(a[0] + '==' + a[-1])
