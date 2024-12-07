@@ -4,7 +4,7 @@ const tf = require('@tensorflow/tfjs-node');
 const faceapi = require('@vladmandic/face-api');
 
 // Указываем путь к моделям
-const modelPathRoot = path.resolve('C:\\Users\\Laptop Sivets\\WebAnalytic\\pythonProject\\node_project\\models');
+const modelPathRoot = 'model';
 
 async function loadModels() {
   console.log(`{"status": "loading_models", "path": "${modelPathRoot}"}`);
