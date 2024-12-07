@@ -119,4 +119,4 @@ def handle_camera_stopped(data):
         user_analysis.pop(sid, None)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, port=5000, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=True, port=5000, allow_unsafe_werkzeug=True, host='0.0.0.0')
