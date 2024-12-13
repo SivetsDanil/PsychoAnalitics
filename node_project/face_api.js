@@ -2,15 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const tf = require('@tensorflow/tfjs-node');
 const faceapi = require('@vladmandic/face-api');
-
-// Указываем путь к моделям
 const modelPathRoot = 'model';
-
 async function loadModels() {
   console.log(`{"status": "loading_models", "path": "${modelPathRoot}"}`);
-  await faceapi.nets.ssdMobilenetv1.loadFromDisk(modelPathRoot); // Для обнаружения лиц
-  await faceapi.nets.faceExpressionNet.loadFromDisk(modelPathRoot); // Для эмоций
-  await faceapi.nets.ageGenderNet.loadFromDisk(modelPathRoot); // Для пола (опционально)
+  await faceapi.nets.ssdMobilenetv1.loadFromDisk(modelPathRoot);
+  await faceapi.nets.faceExpressionNet.loadFromDisk(modelPathRoot);
+  await faceapi.nets.ageGenderNet.loadFromDisk(modelPathRoot);
   console.log(`{"status": "models_loaded"}`);
 }
 
@@ -24,7 +21,7 @@ async function detectFace(imageTensor) {
   try {
     return await faceapi.detectAllFaces(imageTensor)
       .withFaceExpressions()
-      .withAgeAndGender(); // Если нужен пол, оставьте; иначе удалите.
+      .withAgeAndGender();
   } catch (err) {
     console.error(`{"status": "error", "message": "${err.message}"}`);
     return [];
@@ -41,13 +38,10 @@ async function main() {
   await loadModels();
   const tensor = await imageToTensor(imgPath);
   const detections = await detectFace(tensor);
-
-  // Возвращаем только эмоции и пол
   const result = detections.map(detection => ({
     gender: detection.gender,
     expressions: detection.expressions
   }));
-
   console.log(JSON.stringify(result, null, 2));
 }
 

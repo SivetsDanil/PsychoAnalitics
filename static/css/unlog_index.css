@@ -1,10 +1,11 @@
 .home-container {
   width: 100%;
   display: flex;
-  min-height: 100vh;
+  min-height: 100%;
   align-items: center;
   font-family: "Inter";
   flex-direction: column;
+  background-color: #fcf7ff;
 }
 .home-container01 {
   width: 100%;
@@ -19,7 +20,7 @@
   z-index: 100;
   position: sticky;
   box-shadow: 5px 5px 10px 0px #62349e;
-  background-color: #62349e;
+  background-color: #771fb1;
 }
 .home-navbar {
   width: 100%;
@@ -40,8 +41,8 @@
   justify-content: space-between;
 }
 .home-logo img {
-  height: 50px;
-  width: 50px;
+  height: 40px;
+  width: 40px;
 }
 .home-right {
   height: 100%;
@@ -75,7 +76,7 @@
   background-color: #000000;
 }
 .home-get-started:hover {
-  background-color: #2e2e2e;
+  background-color: #555555;
 }
 .home-text {
   font-size: 15px;
@@ -83,13 +84,12 @@
 }
 .home-hero {
   width: 100%;
-  height: 100%;
+  height: 110%;
   display: flex;
   align-items: center;
   padding-left: var(--dl-space-space-sevenunits);
   padding-right: var(--dl-space-space-sevenunits);
   flex-direction: column;
-  background-color: white;
 }
 .home-header {
   display: flex;
@@ -574,7 +574,7 @@
   padding-left: var(--dl-space-space-sevenunits);
   padding-right: var(--dl-space-space-sevenunits);
   flex-direction: column;
-  background-color: white;
+  background-color: #fcf7ff;
 
 }
 .home-info {
@@ -897,7 +897,7 @@
     line-height: 36px;
   }
   .home-text02 {
-    font-size: 16px;
+    font-size: 14px;
     max-width: 700px;
     margin-top: var(--dl-space-space-unit);
     line-height: 24px;

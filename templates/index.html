@@ -8,14 +8,11 @@
 
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-left">
             <button id="logo-btn">
                 <img src="/static/img/logo.png" alt="Логотип"/>
             </button>
-            <button>Профиль</button>
-            <button>Войти</button>
         </div>
         <div class="navbar-right">
             <button id="video-call-btn">
@@ -24,8 +21,6 @@
 
         </div>
     </nav>
-
-    <!-- Chat Container -->
     <div class="chat-container">
         <div id="message-container"></div>
         <div id="input-container">
@@ -38,12 +33,8 @@
             </button>
         </div>
     </div>
-
-    <!-- Information Display for Analyzed Data (Emotion and Gender) -->
     <div id="info-container">
-        <!-- Информация по эмоциям и полу будет обновляться здесь -->
     </div>
-
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script src="/static/script.js"></script>
 </body>

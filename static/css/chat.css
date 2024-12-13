@@ -1,4 +1,3 @@
-/* Основные стили */
 * {
     box-sizing: border-box;
 }
@@ -6,77 +5,72 @@ body, html {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Отключаем прокрутку */
+    overflow: hidden;
     background-color: #2e2e2e;
     color: #ffffff;
     font-family: Arial, sans-serif;
 }
-
-/* Стили навигационной панели */
 .navbar {
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #62349e;
+    background-color: #771fb1;
     padding: 6px;
 }
-
-/* Стили для кнопки видеозвонка */
 #video-call-btn {
-    background-color: #62349e;
+    background-color: #771fb1;
     color: #2e2e2e;
     border: none;
     cursor: pointer;
     padding: 4px;
-    margin-right: 10px; /* Отступ справа */
+    margin-right: 10px;
 }
 
 #video-call-btn img {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
     display: block;
 }
 
 .navbar button {
     background-color: #62349e;
-    border: 2px solid #2e2e2e; /* черная окантовка толщиной 2px */
+    border: 2px solid #2e2e2e;
     color: #2e2e2e;
     padding: 4px 15px;
     margin: 1px;
     cursor: pointer;
     border-radius: 10px;
-    font-weight: bold; /* Жирный текст */
+    font-weight: bold;
     font-size: 16px;
 }
 #logo-btn {
-    background-color: #62349e;
+    background-color: #771fb1;
     color: #2e2e2e;
     border: none;
     cursor: pointer;
     padding: 0px;
-    margin-right: 5px; /* Отступ справа */
+    margin-left: 5px;
 
 }
 
 #logo-btn img {
-    width: 20px;
-    height: 20px;
-    transform: translateY(5px);
+    width: 40px;
+    height: 40px;
+    transform: translateY(3px);
 }
 :root {
-    --vh: 100vh; /* Первоначально 100vh */
+    --vh: 100vh;
 }
-/* Контейнер для чата */
 .chat-container {
-    height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-bottom));
+    height: calc(var(--vh, 60) * 100 - 10px);
     background-color: #2e2e2e;
-    padding: 20px 10px; /* Убираем лишний отступ снизу */
+    padding: 20px 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-/* Контейнер для сообщений */
 #message-container {
     flex-grow: 1;
     overflow-y: auto;
@@ -92,35 +86,31 @@ body, html {
     color: white;
 }
 
-
-/* Сообщения пользователя */
 .message.right {
-    background-color: #3a3a3a; /* Цвет для сообщений пользователя */
+    background-color: #3a3a3a;
     align-self: flex-end;
-    margin-right: 10px; /* Отступ справа */
+    margin-right: 10px;
 }
 
-/* Сообщения бота */
 .message.left {
-    background-color: #62349e; /* Цвет для сообщений бота */
+    background-color: #771fb1;
     align-self: flex-start;
-    margin-left: 10px; /* Отступ слева */
+    margin-left: 10px;
 }
 .message-sender.left {
     font-weight: bold;
     align-self: flex-start;
     margin-bottom: 0px;
     font-size: 14px;
-    color: #c5a3e3; /* Цвет для имени отправителя */
+    color: #c5a3e3;
 }
 .message-sender.right {
     font-weight: bold;
     align-self: flex-end;
     margin-bottom: 0px;
     font-size: 14px;
-    color: #549e61; /* Цвет для имени отправителя */
+    color: #549e61;
 }
-/* Контейнер сообщений */
 #message-container {
     display: flex;
     flex-direction: column;
@@ -130,7 +120,6 @@ body, html {
     max-height: 80vh;
 }
 
-/* Контейнер для поля ввода */
 #input-container {
     display: flex;
     align-items: center;
@@ -139,7 +128,6 @@ body, html {
     border-top: 1px solid #444;
 }
 
-/* Поле ввода сообщения */
 #message-input {
     flex: 1;
     padding: 10px;
@@ -150,7 +138,6 @@ body, html {
     color: #ffffff;
 }
 
-/* Кнопка отправки */
 #send-btn {
     background-color: #549e61;
     border: none;
@@ -189,15 +176,15 @@ body, html {
 }
 
 #info-container {
-            display: none; /* Скрыть контейнер по умолчанию */
-            position: absolute;
-            top: 60px;
-            left: 20px;
-            color: white;
-            font-size: 14px; /* Меньший шрифт */
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 9999; /* Ставим на передний план */
-        }
+    display: none;
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    color: white;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 9999;
+}
